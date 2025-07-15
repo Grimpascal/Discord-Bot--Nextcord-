@@ -1,6 +1,8 @@
 import nextcord
 import aiohttp
 from nextcord.ext import commands
+import random
+import asyncio
 
 intents = nextcord.Intents.default()
 intents.message_content = True
@@ -54,5 +56,29 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+@bot.command()
+async def dadu(ctx):
+    Cdadu = 1394562788818554890
+    hasil = random.randint(1,6)
+    
+    if ctx.channel.id == Cdadu:
+        await ctx.send('Masukkan tebakanmu (1-6)...')
+        
+        def check(m):
+            return (m.author == ctx.author 
+                    and m.channel == ctx.channel 
+                    and m.content.isdigit() 
+                    and 1 <= int(m.content) <= 6)
+        
+        try:
+            inputUser = await bot.wait_for('message', timeout=5.0, check=check)
+            
+            if int(inputUser.content) == hasil:
+                await ctx.reply(f'🎉 Benar! Angka dadu adalah {hasil}')
+            else:
+                await ctx.reply(f'❌ Salah! Yang benar adalah {hasil}')
+                
+        except asyncio.TimeoutError:
+            await ctx.send('⏰ Waktu habis...')
 
 bot.run('TOKEN')
